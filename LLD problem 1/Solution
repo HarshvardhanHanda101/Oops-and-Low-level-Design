@@ -1,0 +1,147 @@
+class database_manager{
+    public:
+    unordered_map<string , pair<string , string>>resident_db; //address->name , contact
+    
+    void update(string &contact , string &name , string &address){
+        resident_db[address] = {name , contact};
+    }
+    
+    void getresidentdetails(string &address){
+        cout<<resident_db[address]<<endl;
+    }
+};
+
+class resident : public database_manager{
+private:
+string name_resident;
+string address;
+string contact;
+string otp;
+string destination;
+database_manager *db;
+Public:
+
+resident(string &name_resident , string &address , string &contact ,string &destination , database *db) : name_resident(name_resident) , address(address), contact(contact), destination(destination) , db(db){
+    db->update(contact , name , address);
+}
+
+void send_passcode(){
+    string otp = generate_otp();
+    this->otp = otp;
+    visitor *vis;
+    security *sec;
+    vis.get_passcode(otp);
+    sec.get_passcode(otp);
+}
+};
+
+
+class visitor{
+private:
+string name_visitor;
+string contact;
+string time_arrive;
+string time_dep;
+string passcode;
+
+public:
+ visitor(string &name_visitor , string &contact , string &time_arr , string &time_dep) : name_visitor(name_visitor) , contact(contact) , time_arr(time_arr) , time_dep(time_dep){
+ }
+ 
+ void get_passcode(string &otp){
+     this->passcode = otp;
+ }
+};
+
+class request : public visitor , public resident{
+    private :
+    string otp;
+    string name;
+    string relation;
+    string address_to;
+    string name_to;
+    
+    public:
+    
+    request(string &relation){
+        this->relation = relation;
+    }
+    
+    void request_gen(string &passcode , string &name_visitor){
+        this->otp = passcode;
+        this->name = name_visitor;
+    }
+    
+    void resident_details(string &name_resident , string &address){
+        this->name_to = name_resident;
+        this->address_to = address;
+    }
+};
+class security{
+private:
+string name;
+string post;
+string duty_type;
+string passcode;
+string contact;
+
+public:
+
+security(string &name , string &contact , string &post , string &duty_type) : name(name) , contact(contact) , post(post) , duty_type(duty_type){}
+
+void get_passcode(string &otp){
+    this->passcode = otp;
+}
+};
+
+string generate_otp(){
+    string otp;
+    cin>>otp;
+    return otp;
+}
+
+
+
+
+
+class notifications : public database_manager{
+private:
+string type;
+string destination;
+unordered_set<string>checklist;
+public:
+notifications(string &type , string &destination , unordered_set<string> &checklist) : type(type) , destination(destination) , checklist(checklist){}
+void to_check_all_users(){
+    
+     for(auto it : resident_db){
+         if(checklist.find(it.first) == checklist.end()){
+             checklist.insert(it.first);
+         }
+     }
+}
+};
+
+class notification_service() : public notification{
+    public:
+    void send_notification(string &type , string &destination , unordered_set<string> &checklist){
+        
+    }
+};
+
+class announcements : public database{
+private:
+String type;
+String times;
+String duration;
+database *db;
+unordered_set<string>checklist;
+public:
+announcement(string &type , string &times , string &duration) : type(type) , times(times) , duration(duration){}
+void to_check_all_users(){
+     for(auto it : resident_db){
+         if(checklist.find(it.first) == checklist.end()){
+             checklist.insert(it.first);
+         }
+     }
+}
+};
